@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dünya genelinde yayınlanan film ve dizileri keşfedin. TMDB API ile güçlendirilmiş modern platform.">
+    <meta name="keywords" content="film, dizi, sinema, TMDB, Netflix, platform">
+    <meta name="author" content="CineVerse">
+    <title>CineVerse - Film ve Dizi Platformu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-card: #1a1a1a;
+            --text-primary: #e5e5e5;
+            --text-secondary: #999;
+            --accent: #e50914;
+            --accent-hover: #f40612;
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(229, 9, 20, 0.8);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.9rem 3rem 0.9rem 1.5rem;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 0.7rem 1.5rem;
+            background: transparent;
+            border: 2px solid var(--text-secondary);
+            border-radius: 25px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--accent);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+            z-index: -1;
+        }
+
+        .nav-btn:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .favorites-badge {
+            background: var(--gold);
+            color: var(--bg-primary);
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            animation: fadeIn 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.3rem;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: scaleIn 0.5s ease both;
+            background: var(--bg-card);
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .content-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .content-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .favorite-btn:hover {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .favorite-btn.active {
+            background: var(--accent);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            border: 3px solid var(--bg-card);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo" onclick="app.showHome()">CINEVERSE</div>
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchInput" placeholder="Film veya dizi ara...">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" id="homeBtn" onclick="app.showHome()">Ana Sayfa</button>
+                <button class="nav-btn" id="favoritesBtn" onclick="app.showFavorites()">
+                    Favorilerim
+                    <span class="favorites-badge" id="favoriteCount">0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="homeView">
+            <h2 class="section-title">Popüler İçerikler</h2>
+            <div class="filters">
+                <button class="filter-btn active" onclick="app.filterContent('all')">Tümü</button>
+                <button class="filter-btn" onclick="app.filterContent('movie')">Filmler</button>
+                <button class="filter-btn" onclick="app.filterContent('tv')">Diziler</button>
+            </div>
+            <div id="contentGrid" class="content-grid"></div>
+        </div>
+
+        <div id="favoritesView" style="display: none;">
+            <h2 class="section-title">Favori Listem</h2>
+            <div id="favoritesGrid" class="content-grid"></div>
+            <div id="emptyFavorites" class="empty-state" style="display: none;">
+                <h2>Henüz favori eklemediniz</h2>
+                <p>Beğendiğiniz film ve dizileri favorilerinize ekleyerek burada görebilirsiniz</p>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Yükleniyor...</p>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            apiKey: 'eeca3bb440385af0520341e1a39a925b', // TMDB public API key
+            baseUrl: 'https://api.themoviedb.org/3',
+            imageBaseUrl: 'https://image.tmdb.org/t/p/w500',
+            currentFilter: 'all',
+            currentView: 'home',
+            allContent: [],
+            favorites: [],
+
+            init() {
+                this.loadFavorites();
+                this.fetchPopularContent();
+                this.setupSearch();
+                this.updateFavoriteCount();
+            },
+
+            loadFavorites() {
+                const stored = localStorage.getItem('cineverse_favorites');
+                this.favorites = stored ? JSON.parse(stored) : [];
+            },
+
+            saveFavorites() {
+                localStorage.setItem('cineverse_favorites', JSON.stringify(this.favorites));
+                this.updateFavoriteCount();
+            },
+
+            updateFavoriteCount() {
+                document.getElementById('favoriteCount').textContent = this.favorites.length;
+            },
+
+            async fetchPopularContent() {
+                this.showLoading(true);
+                try {
+                    const [moviesRes, tvRes] = await Promise.all([
+                        fetch(`${this.baseUrl}/movie/popular?api_key=${this.apiKey}&language=tr-TR&page=1`),
+                        fetch(`${this.baseUrl}/tv/popular?api_key=${this.apiKey}&language=tr-TR&page=1`)
+                    ]);
+
+                    const moviesData = await moviesRes.json();
+                    const tvData = await tvRes.json();
+
+                    const movies = moviesData.results.map(item => ({...item, media_type: 'movie'}));
+                    const tv = tvData.results.map(item => ({...item, media_type: 'tv'}));
+
+                    this.allContent = [...movies, ...tv].sort(() => Math.random() - 0.5);
+                    this.renderContent();
+                } catch (error) {
+                    console.error('Veri çekme hatası:', error);
+                } finally {
+                    this.showLoading(false);
+                }
+            },
+
+            async searchContent(query) {
+                if (!query.trim()) {
+                    this.fetchPopularContent();
+                    return;
+                }
+
+                this.showLoading(true);
+                try {
+                    const res = await fetch(
+                        `${this.baseUrl}/search/multi?api_key=${this.apiKey}&language=tr-TR&query=${encodeURIComponent(query)}&page=1`
+                    );
+                    const data = await res.json();
+                    this.allContent = data.results.filter(item => 
+                        item.media_type === 'movie' || item.media_type === 'tv'
+                    );
+                    this.renderContent();
+                } catch (error) {
+                    console.error('Arama hatası:', error);
+                } finally {
+                    this.showLoading(false);
+                }
+            },
+
+            setupSearch() {
+                const searchInput = document.getElementById('searchInput');
+                let timeout;
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        this.searchContent(e.target.value);
+                    }, 500);
+                });
+            },
+
+            filterContent(type) {
+                this.currentFilter = type;
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                this.renderContent();
+            },
+
+            renderContent() {
+                const grid = document.getElementById('contentGrid');
+                grid.innerHTML = '';
+
+                let content = this.allContent;
+                if (this.currentFilter !== 'all') {
+                    content = content.filter(item => item.media_type === this.currentFilter);
+                }
+
+                content.forEach((item, index) => {
+                    const card = this.createCard(item, index);
+                    grid.appendChild(card);
+                });
+            },
+
+            createCard(item, index) {
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.style.animationDelay = `${index * 0.05}s`;
+
+                const title = item.title || item.name;
+                const releaseDate = item.release_date || item.first_air_date;
+                const year = releaseDate ? new Date(releaseDate).getFullYear() : 'N/A';
+                const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+                const posterPath = item.poster_path 
+                    ? `${this.imageBaseUrl}${item.poster_path}`
+                    : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="300"%3E%3Crect fill="%23333" width="200" height="300"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" fill="%23666" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E';
+
+                const isFavorite = this.favorites.some(fav => fav.id === item.id);
+
+                card.innerHTML = `
+                    <img src="${posterPath}" alt="${title}" class="card-poster">
+                    <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="app.toggleFavorite(event, ${item.id})">
+                        ${isFavorite ? '❤️' : '🤍'}
+                    </button>
+                    <div class="card-overlay">
+                        <div class="card-title">${title}</div>
+                        <div class="card-info">
+                            <span>${year}</span>
+                            <span class="rating">⭐ ${rating}</span>
+                        </div>
+                    </div>
+                `;
+
+                return card;
+            },
+
+            toggleFavorite(event, itemId) {
+                event.stopPropagation();
+                const item = this.allContent.find(i => i.id === itemId);
+                if (!item) return;
+
+                const index = this.favorites.findIndex(fav => fav.id === itemId);
+                const btn = event.currentTarget;
+
+                if (index > -1) {
+                    this.favorites.splice(index, 1);
+                    btn.classList.remove('active');
+                    btn.textContent = '🤍';
+                } else {
+                    this.favorites.push(item);
+                    btn.classList.add('active');
+                    btn.textContent = '❤️';
+                }
+
+                this.saveFavorites();
+                if (this.currentView === 'favorites') {
+                    this.renderFavorites();
+                }
+            },
+
+            showHome() {
+                this.currentView = 'home';
+                document.getElementById('homeView').style.display = 'block';
+                document.getElementById('favoritesView').style.display = 'none';
+                document.getElementById('homeBtn').classList.add('active');
+                document.getElementById('favoritesBtn').classList.remove('active');
+            },
+
+            showFavorites() {
+                this.currentView = 'favorites';
+                document.getElementById('homeView').style.display = 'none';
+                document.getElementById('favoritesView').style.display = 'block';
+                document.getElementById('homeBtn').classList.remove('active');
+                document.getElementById('favoritesBtn').classList.add('active');
+                this.renderFavorites();
+            },
+
+            renderFavorites() {
+                const grid = document.getElementById('favoritesGrid');
+                const emptyState = document.getElementById('emptyFavorites');
+
+                if (this.favorites.length === 0) {
+                    grid.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+
+                grid.style.display = 'grid';
+                emptyState.style.display = 'none';
+                grid.innerHTML = '';
+
+                this.favorites.forEach((item, index) => {
+                    const card = this.createCard(item, index);
+                    grid.appendChild(card);
+                });
+            },
+
+            showLoading(show) {
+                document.getElementById('loading').style.display = show ? 'block' : 'none';
+            }
+        };
+
+        // Uygulamayı başlat
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
