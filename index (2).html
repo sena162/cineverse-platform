@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="4800+ film ve dizi - Dünya genelinde yayınlanan içerikleri keşfedin">
+    <title>CineVerse ULTRA - Film ve Dizi Platformu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-medium: #141414;
+            --bg-card: #1a1a1a;
+            --text-primary: #e5e5e5;
+            --text-secondary: #999999;
+            --accent-red: #e50914;
+            --accent-hover: #f40612;
+            --gold: #ffd700;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-medium) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.2rem 0;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            color: var(--accent-red);
+            letter-spacing: 3px;
+            cursor: pointer;
+            text-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 30px rgba(229, 9, 20, 0.8);
+        }
+
+        .logo-badge {
+            font-size: 0.4em;
+            color: var(--gold);
+            vertical-align: super;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.9rem 3rem 0.9rem 1.5rem;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 50px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 4px rgba(229, 9, 20, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            background: transparent;
+            border: 2px solid var(--text-secondary);
+            border-radius: 25px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--accent-red);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s ease, height 0.5s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            border-color: var(--accent-red);
+            color: white;
+        }
+
+        .btn.active {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gold);
+            color: var(--bg-dark);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-red);
+            border-radius: 2px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .filter-btn, .sort-btn {
+            padding: 0.6rem 1.3rem;
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover, .sort-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-red);
+            background: rgba(229, 9, 20, 0.1);
+        }
+
+        .filter-btn.active {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
+        }
+
+        .sort-btn.active {
+            background: var(--gold);
+            color: var(--bg-dark);
+            border-color: var(--gold);
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 1.5rem;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--bg-card);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.5s ease both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+
+        .card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.8) 50%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            line-height: 1.3;
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 38px;
+            height: 38px;
+            background: rgba(0, 0, 0, 0.8);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+        }
+
+        .favorite-btn:hover {
+            background: var(--accent-red);
+            transform: scale(1.15);
+        }
+
+        .favorite-btn.active {
+            background: var(--accent-red);
+        }
+
+        .turkish-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            min-height: 400px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--bg-card);
+            border-top: 4px solid var(--accent-red);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .empty-state p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+        }
+
+        .error-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(229, 9, 20, 0.05);
+            border-radius: 15px;
+            border: 2px solid rgba(229, 9, 20, 0.2);
+        }
+
+        .error-state h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.5rem;
+            color: var(--accent-red);
+            margin-bottom: 1rem;
+        }
+
+        .error-state p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .error-btn {
+            padding: 1rem 2rem;
+            background: var(--accent-red);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .error-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .load-more-container {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .load-more-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-hover) 100%);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .load-more-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
+        }
+
+        .load-more-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .load-more-btn .btn-icon {
+            font-size: 1.3rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(5px);
+            }
+        }
+
+        .page-info {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .stats-bar {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 1rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .nav-buttons {
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1;
+            }
+
+            .filters {
+                gap: 0.5rem;
+            }
+
+            .filter-btn, .sort-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Modal/Popup Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 15px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--text-secondary);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            transform: rotate(90deg);
+        }
+
+        .modal-backdrop {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-content {
+            padding: 2rem;
+        }
+
+        .modal-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-poster {
+            width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-top: -100px;
+        }
+
+        .modal-info {
+            flex: 1;
+        }
+
+        .modal-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .modal-rating-big {
+            background: var(--gold);
+            color: var(--bg-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .modal-genres {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .genre-tag {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid var(--accent-red);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .modal-overview {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .watch-providers {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--gold);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .watch-providers h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .provider-list {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .provider-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .provider-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .provider-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .watch-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .watch-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-hover) 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .watch-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5);
+        }
+
+        .watch-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--text-secondary);
+            color: var(--text-primary);
+        }
+
+        .watch-btn.secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .modal-cast {
+            margin-top: 2rem;
+        }
+
+        .modal-cast h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-seasons {
+            margin-top: 2rem;
+            background: rgba(229, 9, 20, 0.05);
+            border: 1px solid rgba(229, 9, 20, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+
+        .modal-seasons h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.8rem;
+            color: var(--accent-red);
+            margin-bottom: 1rem;
+        }
+
+        .seasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .season-item {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .season-item:hover {
+            border-color: var(--accent-red);
+            transform: translateY(-3px);
+        }
+
+        .season-item.expanded {
+            border-color: var(--gold);
+        }
+
+        .season-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .season-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .season-year {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .season-info {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .season-episodes {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .season-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--gold);
+        }
+
+        .season-overview {
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .season-expand-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.6rem;
+            background: rgba(229, 9, 20, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            color: var(--accent-red);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .season-expand-btn:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .episodes-list {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .episodes-list.show {
+            display: block;
+        }
+
+        .episode-item {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-left: 3px solid var(--accent-red);
+            transition: all 0.3s ease;
+        }
+
+        .episode-item:hover {
+            background: rgba(229, 9, 20, 0.05);
+            transform: translateX(5px);
+        }
+
+        .episode-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .episode-number {
+            font-size: 0.75rem;
+            background: var(--accent-red);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 5px;
+            font-weight: 700;
+        }
+
+        .episode-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            margin: 0 1rem;
+        }
+
+        .episode-rating {
+            font-size: 0.85rem;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .episode-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .episode-overview {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .episodes-loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .episodes-loading .spinner {
+            width: 30px;
+            height: 30px;
+            border-width: 3px;
+            margin: 0 auto 1rem;
+        }
+
+        .seasons-stats {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem;
+            background: var(--bg-dark);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .seasons-stat {
+            text-align: center;
+        }
+
+        .seasons-stat-number {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2rem;
+            color: var(--accent-red);
+            line-height: 1;
+        }
+
+        .seasons-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .cast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .cast-item {
+            text-align: center;
+        }
+
+        .cast-photo {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .cast-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .cast-character {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .modal-videos {
+            margin-top: 2rem;
+        }
+
+        .modal-videos h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--bg-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(229, 9, 20, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover .video-play-overlay {
+            background: var(--accent-red);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-type {
+            display: inline-block;
+            background: var(--accent-red);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .youtube-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 1rem;
+        }
+
+        .main-trailer {
+            margin-bottom: 2rem;
+        }
+
+        .main-trailer h4 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.5rem;
+            color: var(--accent-red);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-header {
+                flex-direction: column;
+            }
+
+            .modal-poster {
+                width: 150px;
+                margin-top: -80px;
+            }
+
+            .modal-title {
+                font-size: 2rem;
+            }
+
+            .modal-backdrop {
+                height: 250px;
+            }
+
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo" onclick="app.showHome()">
+                CINEVERSE<span class="logo-badge">ULTRA</span>
+            </div>
+            
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="4800+ içerik içinde ara..."
+                    autocomplete="off"
+                >
+                <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn active" id="homeBtn" onclick="app.showHome()">
+                    Ana Sayfa
+                </button>
+                <button class="btn" id="favBtn" onclick="app.showFavorites()">
+                    Favorilerim
+                    <span class="badge" id="favCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section id="homeView">
+            <h1 class="section-title">Popüler İçerikler</h1>
+            
+            <div class="stats-bar" id="statsBar">
+                <div class="stat">
+                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-label">Toplam İçerik</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="movieCount">0</div>
+                    <div class="stat-label">Film</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="tvCount">0</div>
+                    <div class="stat-label">Dizi</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="turkishCount">0</div>
+                    <div class="stat-label">🇹🇷 Türk Yapımı</div>
+                </div>
+            </div>
+            
+            <div class="filters">
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; width: 100%;">
+                    <button class="filter-btn active" data-filter="all">Tümü</button>
+                    <button class="filter-btn" data-filter="movie">Filmler</button>
+                    <button class="filter-btn" data-filter="tv">Diziler</button>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; width: 100%; margin-top: 1rem;">
+                    <button class="filter-btn" data-region="all">Tüm Ülkeler</button>
+                    <button class="filter-btn" data-region="TR">🇹🇷 Türk Yapımı</button>
+                    <button class="filter-btn" data-region="foreign">🌍 Yabancı Yapım</button>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; width: 100%; margin-top: 1rem;">
+                    <button class="filter-btn" data-genre="all">Tüm Türler</button>
+                    <button class="filter-btn" data-genre="28">🎬 Aksiyon</button>
+                    <button class="filter-btn" data-genre="35">😂 Komedi</button>
+                    <button class="filter-btn" data-genre="18">🎭 Drama</button>
+                    <button class="filter-btn" data-genre="27">👻 Korku</button>
+                    <button class="filter-btn" data-genre="10749">💕 Romantik</button>
+                    <button class="filter-btn" data-genre="878">🚀 Bilim Kurgu</button>
+                    <button class="filter-btn" data-genre="53">😱 Gerilim</button>
+                    <button class="filter-btn" data-genre="16">🎨 Animasyon</button>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; width: 100%; margin-top: 1rem; align-items: center;">
+                    <span style="color: var(--text-secondary); font-weight: 600;">📅 Yıl:</span>
+                    <button class="filter-btn" data-year="all">Tümü</button>
+                    <button class="filter-btn" data-year="2024">2024</button>
+                    <button class="filter-btn" data-year="2023">2023</button>
+                    <button class="filter-btn" data-year="2022">2022</button>
+                    <button class="filter-btn" data-year="2021">2021</button>
+                    <button class="filter-btn" data-year="2020">2020</button>
+                    <button class="filter-btn" data-year="2010s">2010'lar</button>
+                    <button class="filter-btn" data-year="2000s">2000'ler</button>
+                    <button class="filter-btn" data-year="1990s">90'lar</button>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; width: 100%; margin-top: 1rem;">
+                    <button class="sort-btn" data-sort="popularity">⭐ Popülerlik</button>
+                    <button class="sort-btn" data-sort="rating">🏆 En Yüksek Puan</button>
+                    <button class="sort-btn active" data-sort="az">🔤 A-Z</button>
+                    <button class="sort-btn" data-sort="za">🔤 Z-A</button>
+                    <button class="sort-btn" data-sort="date">📅 Yeni → Eski</button>
+                </div>
+            </div>
+
+            <div id="homeGrid" class="grid"></div>
+            
+            <div id="loadMoreContainer" class="load-more-container">
+                <button id="loadMoreBtn" class="load-more-btn" onclick="app.loadMore()">
+                    <span class="btn-text">Daha Fazla Yükle</span>
+                    <span class="btn-icon">⬇️</span>
+                </button>
+                <p id="pageInfo" class="page-info"></p>
+            </div>
+        </section>
+
+        <section id="favView" class="hidden">
+            <h1 class="section-title">Favori Listem</h1>
+            <div id="favGrid" class="grid"></div>
+            <div id="emptyFav" class="empty-state hidden">
+                <h2>Henüz favori eklemediniz</h2>
+                <p>Beğendiğiniz film ve dizileri kalp ikonuna tıklayarak<br>favorilerinize ekleyebilirsiniz</p>
+            </div>
+        </section>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p class="loading-text">Yükleniyor...</p>
+        </div>
+    </main>
+
+    <!-- Modal for content details -->
+    <div id="modalOverlay" class="modal-overlay hidden" onclick="app.closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="app.closeModal()">×</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            config: {
+                apiKey: '43e3afb23b9fb61a6189d86a8e563c27',
+                baseUrl: 'https://api.themoviedb.org/3',
+                imageUrl: 'https://image.tmdb.org/t/p/w500',
+                language: 'tr-TR'
+            },
+
+            state: {
+                currentView: 'home',
+                currentFilter: 'all',
+                currentRegion: 'all',
+                currentGenre: 'all',
+                currentYear: 'all',
+                currentSort: 'az',
+                allContent: [],
+                favorites: [],
+                searchTimeout: null,
+                currentPage: 1,
+                totalPages: 20,
+                isLoading: false
+            },
+
+            init() {
+                this.loadFavorites();
+                this.setupEventListeners();
+                this.fetchPopularContent();
+                this.updateFavCount();
+            },
+
+            loadFavorites() {
+                try {
+                    const stored = localStorage.getItem('cineverse_ultra_favorites');
+                    this.state.favorites = stored ? JSON.parse(stored) : [];
+                } catch (error) {
+                    console.error('Favoriler yüklenemedi:', error);
+                    this.state.favorites = [];
+                }
+            },
+
+            saveFavorites() {
+                try {
+                    localStorage.setItem('cineverse_ultra_favorites', JSON.stringify(this.state.favorites));
+                    this.updateFavCount();
+                } catch (error) {
+                    console.error('Favoriler kaydedilemedi:', error);
+                }
+            },
+
+            updateFavCount() {
+                document.getElementById('favCount').textContent = this.state.favorites.length;
+            },
+
+            setupEventListeners() {
+                const searchInput = document.getElementById('searchInput');
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(this.state.searchTimeout);
+                    this.state.searchTimeout = setTimeout(() => {
+                        const query = e.target.value.trim();
+                        if (query) {
+                            this.searchContent(query);
+                        } else {
+                            this.renderContent();
+                        }
+                    }, 500);
+                });
+
+                document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.state.currentFilter = e.target.dataset.filter;
+                        this.renderContent();
+                    });
+                });
+
+                document.querySelectorAll('.filter-btn[data-region]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-btn[data-region]').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.state.currentRegion = e.target.dataset.region;
+                        this.renderContent();
+                    });
+                });
+
+                document.querySelectorAll('.filter-btn[data-genre]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-btn[data-genre]').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.state.currentGenre = e.target.dataset.genre;
+                        this.renderContent();
+                    });
+                });
+
+                document.querySelectorAll('.filter-btn[data-year]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.filter-btn[data-year]').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.state.currentYear = e.target.dataset.year;
+                        this.renderContent();
+                    });
+                });
+
+                document.querySelectorAll('.sort-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.state.currentSort = e.target.dataset.sort;
+                        this.renderContent();
+                    });
+                });
+            },
+
+            async fetchPopularContent(append = false) {
+                if (this.state.isLoading) return;
+                
+                this.state.isLoading = true;
+                this.showLoading(true);
+                
+                try {
+                    const page = this.state.currentPage;
+                    const requests = [];
+                    
+                    // ULTRA MOD: Her sayfada 12 farklı API çağrısı
+                    const pageOffsets = [page, page + 10];
+                    
+                    for (const pageNum of pageOffsets) {
+                        // Popüler Filmler
+                        requests.push(fetch(`${this.config.baseUrl}/movie/popular?api_key=${this.config.apiKey}&language=${this.config.language}&page=${pageNum}`));
+                        
+                        // En Yüksek Puanlı Filmler
+                        requests.push(fetch(`${this.config.baseUrl}/movie/top_rated?api_key=${this.config.apiKey}&language=${this.config.language}&page=${pageNum}`));
+                        
+                        // Popüler Diziler
+                        requests.push(fetch(`${this.config.baseUrl}/tv/popular?api_key=${this.config.apiKey}&language=${this.config.language}&page=${pageNum}`));
+                        
+                        // En Yüksek Puanlı Diziler
+                        requests.push(fetch(`${this.config.baseUrl}/tv/top_rated?api_key=${this.config.apiKey}&language=${this.config.language}&page=${pageNum}`));
+                        
+                        // Türk Filmleri
+                        requests.push(fetch(`${this.config.baseUrl}/discover/movie?api_key=${this.config.apiKey}&language=${this.config.language}&with_origin_country=TR&sort_by=popularity.desc&page=${pageNum}`));
+                        
+                        // Türk Dizileri
+                        requests.push(fetch(`${this.config.baseUrl}/discover/tv?api_key=${this.config.apiKey}&language=${this.config.language}&with_origin_country=TR&sort_by=popularity.desc&page=${pageNum}`));
+                    }
+
+                    const responses = await Promise.all(requests);
+                    const dataArray = await Promise.all(responses.filter(r => r.ok).map(r => r.json()));
+                    
+                    let newItems = [];
+                    
+                    dataArray.forEach((data, index) => {
+                        const categoryIndex = index % 6;
+                        
+                        if (categoryIndex === 0 || categoryIndex === 1) {
+                            newItems.push(...data.results.map(item => ({ 
+                                ...item, 
+                                media_type: 'movie',
+                                is_top_rated: categoryIndex === 1
+                            })));
+                        } else if (categoryIndex === 2 || categoryIndex === 3) {
+                            newItems.push(...data.results.map(item => ({ 
+                                ...item, 
+                                media_type: 'tv',
+                                is_top_rated: categoryIndex === 3
+                            })));
+                        } else if (categoryIndex === 4) {
+                            newItems.push(...data.results.map(item => ({ 
+                                ...item, 
+                                media_type: 'movie', 
+                                origin_country: ['TR'], 
+                                is_turkish: true 
+                            })));
+                        } else if (categoryIndex === 5) {
+                            newItems.push(...data.results.map(item => ({ 
+                                ...item, 
+                                media_type: 'tv', 
+                                origin_country: ['TR'], 
+                                is_turkish: true 
+                            })));
+                        }
+                    });
+
+                    if (append) {
+                        const combined = [...this.state.allContent, ...newItems];
+                        this.state.allContent = combined.reduce((acc, current) => {
+                            const exists = acc.find(item => item.id === current.id && item.media_type === current.media_type);
+                            if (!exists) {
+                                acc.push(current);
+                            } else if (current.is_turkish && !exists.is_turkish) {
+                                const index = acc.findIndex(item => item.id === current.id && item.media_type === current.media_type);
+                                acc[index] = { ...acc[index], origin_country: ['TR'], is_turkish: true };
+                            }
+                            return acc;
+                        }, []);
+                    } else {
+                        this.state.allContent = newItems.reduce((acc, current) => {
+                            const exists = acc.find(item => item.id === current.id && item.media_type === current.media_type);
+                            if (!exists) {
+                                acc.push(current);
+                            } else if (current.is_turkish && !exists.is_turkish) {
+                                const index = acc.findIndex(item => item.id === current.id && item.media_type === current.media_type);
+                                acc[index] = { ...acc[index], origin_country: ['TR'], is_turkish: true };
+                            }
+                            return acc;
+                        }, []);
+                    }
+
+                    console.log(`🚀 Sayfa ${this.state.currentPage}: +${newItems.length} yeni | Toplam: ${this.state.allContent.length} içerik!`);
+                    
+                    this.updateStats();
+                    this.renderContent();
+                } catch (error) {
+                    console.error('İçerik yüklenirken hata:', error);
+                    this.showError('Film ve diziler yüklenirken bir hata oluştu.');
+                } finally {
+                    this.state.isLoading = false;
+                    this.showLoading(false);
+                }
+            },
+
+            async searchContent(query) {
+                this.showLoading(true);
+
+                try {
+                    const response = await fetch(
+                        `${this.config.baseUrl}/search/multi?api_key=${this.config.apiKey}&language=${this.config.language}&query=${encodeURIComponent(query)}&page=1`
+                    );
+
+                    if (!response.ok) throw new Error('Arama başarısız');
+
+                    const data = await response.json();
+                    this.state.allContent = data.results.filter(item => 
+                        item.media_type === 'movie' || item.media_type === 'tv'
+                    );
+
+                    this.updateStats();
+                    this.renderContent();
+                } catch (error) {
+                    console.error('Arama hatası:', error);
+                    this.showError('Arama yaparken bir hata oluştu.');
+                } finally {
+                    this.showLoading(false);
+                }
+            },
+
+            updateStats() {
+                const total = this.state.allContent.length;
+                const movies = this.state.allContent.filter(i => i.media_type === 'movie').length;
+                const tv = this.state.allContent.filter(i => i.media_type === 'tv').length;
+                const turkish = this.state.allContent.filter(i => i.is_turkish).length;
+
+                document.getElementById('totalCount').textContent = total;
+                document.getElementById('movieCount').textContent = movies;
+                document.getElementById('tvCount').textContent = tv;
+                document.getElementById('turkishCount').textContent = turkish;
+            },
+
+            renderContent() {
+                const grid = document.getElementById('homeGrid');
+                grid.innerHTML = '';
+
+                let content = [...this.state.allContent];
+                
+                if (this.state.currentFilter !== 'all') {
+                    content = content.filter(item => item.media_type === this.state.currentFilter);
+                }
+
+                if (this.state.currentRegion === 'TR') {
+                    content = content.filter(item => item.is_turkish === true || (item.origin_country && item.origin_country.includes('TR')));
+                } else if (this.state.currentRegion === 'foreign') {
+                    content = content.filter(item => !item.is_turkish && (!item.origin_country || !item.origin_country.includes('TR')));
+                }
+
+                // Genre filtresi
+                if (this.state.currentGenre !== 'all') {
+                    const genreId = parseInt(this.state.currentGenre);
+                    content = content.filter(item => {
+                        return item.genre_ids && item.genre_ids.includes(genreId);
+                    });
+                }
+
+                // Yıl filtresi
+                if (this.state.currentYear !== 'all') {
+                    const year = this.state.currentYear;
+                    content = content.filter(item => {
+                        const date = item.release_date || item.first_air_date;
+                        if (!date) return false;
+                        
+                        const itemYear = new Date(date).getFullYear();
+                        
+                        if (year === '2010s') {
+                            return itemYear >= 2010 && itemYear <= 2019;
+                        } else if (year === '2000s') {
+                            return itemYear >= 2000 && itemYear <= 2009;
+                        } else if (year === '1990s') {
+                            return itemYear >= 1990 && itemYear <= 1999;
+                        } else {
+                            return itemYear === parseInt(year);
+                        }
+                    });
+                }
+
+                if (this.state.currentSort === 'az') {
+                    content.sort((a, b) => {
+                        const titleA = (a.title || a.name || '').toLowerCase();
+                        const titleB = (b.title || b.name || '').toLowerCase();
+                        return titleA.localeCompare(titleB, 'tr');
+                    });
+                } else if (this.state.currentSort === 'za') {
+                    content.sort((a, b) => {
+                        const titleA = (a.title || a.name || '').toLowerCase();
+                        const titleB = (b.title || b.name || '').toLowerCase();
+                        return titleB.localeCompare(titleA, 'tr');
+                    });
+                } else if (this.state.currentSort === 'rating') {
+                    content.sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+                } else if (this.state.currentSort === 'date') {
+                    content.sort((a, b) => {
+                        const dateA = new Date(a.release_date || a.first_air_date || 0);
+                        const dateB = new Date(b.release_date || b.first_air_date || 0);
+                        return dateB - dateA;
+                    });
+                } else if (this.state.currentSort === 'popularity') {
+                    content.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+                }
+
+                if (content.length === 0) {
+                    grid.innerHTML = '<div class="empty-state"><h2>Sonuç Bulunamadı</h2><p>Seçtiğiniz filtrelere uygun içerik bulunamadı</p></div>';
+                    document.getElementById('loadMoreContainer').style.display = 'none';
+                    return;
+                }
+
+                content.forEach((item, index) => {
+                    const card = this.createCard(item, index);
+                    grid.appendChild(card);
+                });
+
+                const loadMoreBtn = document.getElementById('loadMoreBtn');
+                const pageInfo = document.getElementById('pageInfo');
+                const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+                if (this.state.currentPage >= this.state.totalPages) {
+                    loadMoreBtn.style.display = 'none';
+                    pageInfo.textContent = `✅ Tüm içerikler yüklendi (${content.length} içerik gösteriliyor)`;
+                } else {
+                    loadMoreBtn.style.display = 'inline-flex';
+                    pageInfo.textContent = `📄 Sayfa ${this.state.currentPage} / ${this.state.totalPages} • ${content.length} içerik gösteriliyor`;
+                }
+
+                loadMoreContainer.style.display = 'block';
+            },
+
+            createCard(item, index) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animationDelay = `${Math.min(index * 0.02, 1)}s`;
+
+                const title = item.title || item.name || 'Başlık yok';
+                const date = item.release_date || item.first_air_date;
+                const year = date ? new Date(date).getFullYear() : 'N/A';
+                const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
+                
+                const posterPath = item.poster_path
+                    ? `${this.config.imageUrl}${item.poster_path}`
+                    : `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='300'%3E%3Crect fill='%23333' width='200' height='300'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23666' font-size='14'%3EPoster yok%3C/text%3E%3C/svg%3E`;
+
+                const isFavorite = this.state.favorites.some(fav => fav.id === item.id);
+                const isTurkish = item.is_turkish || (item.origin_country && item.origin_country.includes('TR'));
+
+                card.innerHTML = `
+                    <img src="${posterPath}" alt="${title}" class="card-poster" loading="lazy">
+                    ${isTurkish ? '<div class="turkish-badge">🇹🇷</div>' : ''}
+                    <button class="favorite-btn ${isFavorite ? 'active' : ''}" data-id="${item.id}">
+                        ${isFavorite ? '❤️' : '🤍'}
+                    </button>
+                    <div class="card-overlay">
+                        <div class="card-title">${title}</div>
+                        <div class="card-info">
+                            <span>${year}</span>
+                            <span class="rating">⭐ ${rating}</span>
+                        </div>
+                    </div>
+                `;
+
+                const favBtn = card.querySelector('.favorite-btn');
+                favBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.toggleFavorite(item.id);
+                });
+
+                // Card tıklama - detay göster
+                card.addEventListener('click', () => {
+                    this.showContentDetails(item);
+                });
+
+                return card;
+            },
+
+            toggleFavorite(itemId) {
+                const item = this.state.allContent.find(i => i.id === itemId);
+                if (!item) return;
+
+                const index = this.state.favorites.findIndex(fav => fav.id === itemId);
+
+                if (index > -1) {
+                    this.state.favorites.splice(index, 1);
+                } else {
+                    this.state.favorites.push(item);
+                }
+
+                this.saveFavorites();
+
+                if (this.state.currentView === 'home') {
+                    this.renderContent();
+                } else {
+                    this.renderFavorites();
+                }
+            },
+
+            loadMore() {
+                if (this.state.currentPage < this.state.totalPages && !this.state.isLoading) {
+                    this.state.currentPage++;
+                    this.fetchPopularContent(true);
+                }
+            },
+
+            showHome() {
+                this.state.currentView = 'home';
+                this.state.currentPage = 1;
+                document.getElementById('homeView').classList.remove('hidden');
+                document.getElementById('favView').classList.add('hidden');
+                document.getElementById('homeBtn').classList.add('active');
+                document.getElementById('favBtn').classList.remove('active');
+                document.getElementById('searchInput').value = '';
+                this.state.allContent = [];
+                this.fetchPopularContent(false);
+            },
+
+            showFavorites() {
+                this.state.currentView = 'favorites';
+                document.getElementById('homeView').classList.add('hidden');
+                document.getElementById('favView').classList.remove('hidden');
+                document.getElementById('homeBtn').classList.remove('active');
+                document.getElementById('favBtn').classList.add('active');
+                this.renderFavorites();
+            },
+
+            renderFavorites() {
+                const grid = document.getElementById('favGrid');
+                const emptyState = document.getElementById('emptyFav');
+
+                if (this.state.favorites.length === 0) {
+                    grid.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                grid.innerHTML = '';
+
+                this.state.favorites.forEach((item, index) => {
+                    const card = this.createCard(item, index);
+                    grid.appendChild(card);
+                });
+            },
+
+            showLoading(show) {
+                const loading = document.getElementById('loading');
+                const homeGrid = document.getElementById('homeGrid');
+                
+                if (show) {
+                    loading.classList.remove('hidden');
+                    if (homeGrid) homeGrid.style.opacity = '0.5';
+                } else {
+                    loading.classList.add('hidden');
+                    if (homeGrid) homeGrid.style.opacity = '1';
+                }
+            },
+
+            showError(message) {
+                const grid = document.getElementById('homeGrid');
+                grid.innerHTML = `
+                    <div class="error-state">
+                        <h2>⚠️ Hata</h2>
+                        <p>${message}</p>
+                        <button class="error-btn" onclick="location.reload()">
+                            Sayfayı Yenile
+                        </button>
+                    </div>
+                `;
+            },
+
+            async showContentDetails(item) {
+                const modal = document.getElementById('modalOverlay');
+                const modalContent = document.getElementById('modalContent');
+                
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+
+                // Loading state
+                modalContent.innerHTML = `
+                    <div style="padding: 4rem; text-align: center;">
+                        <div class="spinner"></div>
+                        <p style="margin-top: 1rem; color: var(--text-secondary);">Detaylar yükleniyor...</p>
+                    </div>
+                `;
+
+                try {
+                    const mediaType = item.media_type;
+                    const itemId = item.id;
+
+                    // Detaylı bilgi, izleme sağlayıcıları, oyuncular ve videolar çek
+                    const [detailsRes, providersRes, creditsRes, videosRes] = await Promise.all([
+                        fetch(`${this.config.baseUrl}/${mediaType}/${itemId}?api_key=${this.config.apiKey}&language=${this.config.language}`),
+                        fetch(`${this.config.baseUrl}/${mediaType}/${itemId}/watch/providers?api_key=${this.config.apiKey}`),
+                        fetch(`${this.config.baseUrl}/${mediaType}/${itemId}/credits?api_key=${this.config.apiKey}&language=${this.config.language}`),
+                        fetch(`${this.config.baseUrl}/${mediaType}/${itemId}/videos?api_key=${this.config.apiKey}&language=tr-TR`)
+                    ]);
+
+                    const details = await detailsRes.json();
+                    const providers = await providersRes.json();
+                    const credits = await creditsRes.json();
+                    const videos = await videosRes.json();
+
+                    // Eğer Türkçe video yoksa İngilizce dene
+                    let allVideos = videos.results || [];
+                    if (allVideos.length === 0) {
+                        const videosEnRes = await fetch(`${this.config.baseUrl}/${mediaType}/${itemId}/videos?api_key=${this.config.apiKey}&language=en-US`);
+                        const videosEn = await videosEnRes.json();
+                        allVideos = videosEn.results || [];
+                    }
+
+                    this.renderModal(details, providers, credits, allVideos, item);
+                } catch (error) {
+                    console.error('Detay yükleme hatası:', error);
+                    modalContent.innerHTML = `
+                        <div style="padding: 4rem; text-align: center;">
+                            <h2 style="color: var(--accent-red); margin-bottom: 1rem;">Detaylar yüklenemedi</h2>
+                            <button class="watch-btn" onclick="app.closeModal()">Kapat</button>
+                        </div>
+                    `;
+                }
+            },
+
+            renderModal(details, providers, credits, videos, originalItem) {
+                const modalContent = document.getElementById('modalContent');
+                
+                const title = details.title || details.name;
+                const backdrop = details.backdrop_path 
+                    ? `${this.config.imageUrl}${details.backdrop_path}`
+                    : `${this.config.imageUrl}${details.poster_path}`;
+                const poster = details.poster_path 
+                    ? `${this.config.imageUrl}${details.poster_path}`
+                    : '';
+                const year = (details.release_date || details.first_air_date || '').substring(0, 4);
+                const rating = details.vote_average ? details.vote_average.toFixed(1) : 'N/A';
+                const runtime = details.runtime || (details.episode_run_time && details.episode_run_time[0]) || '';
+                const overview = details.overview || 'Özet bilgisi mevcut değil.';
+
+                // Genres
+                const genres = details.genres || [];
+                const genresHTML = genres.map(g => `<span class="genre-tag">${g.name}</span>`).join('');
+
+                // Watch Providers (TR için)
+                const trProviders = providers.results?.TR;
+                let providersHTML = '';
+
+                if (trProviders) {
+                    const allProviders = [
+                        ...(trProviders.flatrate || []),
+                        ...(trProviders.buy || []),
+                        ...(trProviders.rent || [])
+                    ];
+
+                    const uniqueProviders = allProviders.reduce((acc, current) => {
+                        const exists = acc.find(item => item.provider_id === current.provider_id);
+                        if (!exists) acc.push(current);
+                        return acc;
+                    }, []);
+
+                    if (uniqueProviders.length > 0) {
+                        providersHTML = `
+                            <div class="watch-providers">
+                                <h3>🎬 Nerede İzlenir (Türkiye)</h3>
+                                <div class="provider-list">
+                                    ${uniqueProviders.map(p => `
+                                        <div class="provider-item">
+                                            <img src="https://image.tmdb.org/t/p/original${p.logo_path}" 
+                                                 alt="${p.provider_name}" 
+                                                 class="provider-logo">
+                                            <span class="provider-name">${p.provider_name}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                // YouTube Videos
+                const youtubeVideos = videos.filter(v => v.site === 'YouTube');
+                const trailer = youtubeVideos.find(v => v.type === 'Trailer' || v.type === 'Teaser');
+                let videosHTML = '';
+
+                if (youtubeVideos.length > 0) {
+                    // Ana fragman varsa göster
+                    let mainTrailerHTML = '';
+                    if (trailer) {
+                        mainTrailerHTML = `
+                            <div class="main-trailer">
+                                <h4>🎬 Fragman</h4>
+                                <iframe 
+                                    class="youtube-player"
+                                    src="https://www.youtube.com/embed/${trailer.key}"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        `;
+                    }
+
+                    // Diğer videolar
+                    const otherVideos = youtubeVideos.filter(v => v.key !== trailer?.key).slice(0, 6);
+                    const otherVideosHTML = otherVideos.length > 0 ? `
+                        <div class="videos-grid">
+                            ${otherVideos.map(video => {
+                                const videoTypeMap = {
+                                    'Trailer': 'Fragman',
+                                    'Teaser': 'Teaser',
+                                    'Clip': 'Klip',
+                                    'Behind the Scenes': 'Kamera Arkası',
+                                    'Featurette': 'Özel',
+                                    'Interview': 'Röportaj'
+                                };
+                                const videoType = videoTypeMap[video.type] || video.type;
+                                
+                                return `
+                                    <div class="video-item" onclick="window.open('https://www.youtube.com/watch?v=${video.key}', '_blank')">
+                                        <img src="https://img.youtube.com/vi/${video.key}/hqdefault.jpg" 
+                                             alt="${video.name}" 
+                                             class="video-thumbnail">
+                                        <div class="video-play-overlay">▶</div>
+                                        <div class="video-info">
+                                            <span class="video-type">${videoType}</span>
+                                            <div class="video-title">${video.name}</div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    ` : '';
+
+                    videosHTML = `
+                        <div class="modal-videos">
+                            <h3>📺 Videolar (YouTube)</h3>
+                            ${mainTrailerHTML}
+                            ${otherVideosHTML}
+                        </div>
+                    `;
+                }
+
+                // Cast
+                const cast = credits.cast?.slice(0, 8) || [];
+                const castHTML = cast.length > 0 ? `
+                    <div class="modal-cast">
+                        <h3>🎭 Oyuncular</h3>
+                        <div class="cast-grid">
+                            ${cast.map(person => `
+                                <div class="cast-item">
+                                    <img src="${person.profile_path ? `https://image.tmdb.org/t/p/w200${person.profile_path}` : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="300"%3E%3Crect fill="%23333" width="200" height="300"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23666" font-size="40"%3E👤%3C/text%3E%3C/svg%3E'}" 
+                                         alt="${person.name}" 
+                                         class="cast-photo">
+                                    <div class="cast-name">${person.name}</div>
+                                    <div class="cast-character">${person.character || 'Rol bilgisi yok'}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : '';
+
+                // Seasons (sadece diziler için)
+                let seasonsHTML = '';
+                if (originalItem.media_type === 'tv' && details.seasons && details.seasons.length > 0) {
+                    const seasons = details.seasons.filter(s => s.season_number > 0); // Özel bölümleri çıkar
+                    
+                    if (seasons.length > 0) {
+                        const totalEpisodes = seasons.reduce((sum, s) => sum + (s.episode_count || 0), 0);
+                        const avgRating = seasons.filter(s => s.vote_average).length > 0
+                            ? (seasons.reduce((sum, s) => sum + (s.vote_average || 0), 0) / seasons.filter(s => s.vote_average).length).toFixed(1)
+                            : 'N/A';
+
+                        seasonsHTML = `
+                            <div class="modal-seasons">
+                                <h3>📺 Sezonlar (${seasons.length} Sezon)</h3>
+                                
+                                <div class="seasons-stats">
+                                    <div class="seasons-stat">
+                                        <div class="seasons-stat-number">${seasons.length}</div>
+                                        <div class="seasons-stat-label">Toplam Sezon</div>
+                                    </div>
+                                    <div class="seasons-stat">
+                                        <div class="seasons-stat-number">${totalEpisodes}</div>
+                                        <div class="seasons-stat-label">Toplam Bölüm</div>
+                                    </div>
+                                    <div class="seasons-stat">
+                                        <div class="seasons-stat-number">⭐ ${avgRating}</div>
+                                        <div class="seasons-stat-label">Ort. Puan</div>
+                                    </div>
+                                </div>
+
+                                <div class="seasons-grid">
+                                    ${seasons.map((season, index) => {
+                                        const seasonYear = season.air_date ? new Date(season.air_date).getFullYear() : '';
+                                        const seasonRating = season.vote_average ? season.vote_average.toFixed(1) : 'N/A';
+                                        
+                                        return `
+                                            <div class="season-item" data-season-number="${season.season_number}" data-tv-id="${originalItem.id}">
+                                                <div class="season-header">
+                                                    <span class="season-name">${season.name}</span>
+                                                    ${seasonYear ? `<span class="season-year">${seasonYear}</span>` : ''}
+                                                </div>
+                                                <div class="season-info">
+                                                    <div class="season-episodes">
+                                                        📺 ${season.episode_count || 0} Bölüm
+                                                    </div>
+                                                    ${season.vote_average ? `
+                                                        <div class="season-rating">
+                                                            ⭐ ${seasonRating}
+                                                        </div>
+                                                    ` : ''}
+                                                </div>
+                                                ${season.overview ? `
+                                                    <div class="season-overview">${season.overview}</div>
+                                                ` : ''}
+                                                <button class="season-expand-btn" onclick="app.toggleSeasonEpisodes(event, ${originalItem.id}, ${season.season_number})">
+                                                    📋 Bölümleri Göster
+                                                </button>
+                                                <div class="episodes-list" id="episodes-s${season.season_number}"></div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                // IMDB ve TMDB linkleri
+                const imdbId = details.imdb_id;
+                const tmdbLink = `https://www.themoviedb.org/${originalItem.media_type}/${originalItem.id}`;
+                const imdbLink = imdbId ? `https://www.imdb.com/title/${imdbId}` : null;
+
+                // Google arama linki
+                const searchQuery = encodeURIComponent(`${title} ${year} izle türkçe dublaj`);
+                const googleLink = `https://www.google.com/search?q=${searchQuery}`;
+
+                // YouTube arama linki
+                const youtubeSearchQuery = encodeURIComponent(`${title} ${year} fragman türkçe`);
+                const youtubeSearchLink = `https://www.youtube.com/results?search_query=${youtubeSearchQuery}`;
+
+                modalContent.innerHTML = `
+                    ${backdrop ? `<img src="${backdrop}" alt="${title}" class="modal-backdrop">` : ''}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            ${poster ? `<img src="${poster}" alt="${title}" class="modal-poster">` : ''}
+                            <div class="modal-info">
+                                <h2 class="modal-title">${title}</h2>
+                                <div class="modal-meta">
+                                    <div class="modal-meta-item">
+                                        <span class="modal-rating-big">⭐ ${rating}</span>
+                                    </div>
+                                    ${year ? `<div class="modal-meta-item">📅 ${year}</div>` : ''}
+                                    ${runtime ? `<div class="modal-meta-item">⏱️ ${runtime} dk</div>` : ''}
+                                    <div class="modal-meta-item">${originalItem.media_type === 'movie' ? '🎬 Film' : '📺 Dizi'}</div>
+                                </div>
+                                ${genresHTML ? `<div class="modal-genres">${genresHTML}</div>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="modal-overview">
+                            <h3 style="font-family: 'Bebas Neue', cursive; font-size: 1.5rem; margin-bottom: 0.5rem;">📖 Hikaye</h3>
+                            ${overview}
+                        </div>
+
+                        ${providersHTML}
+
+                        ${videosHTML}
+
+                        ${seasonsHTML}
+
+                        <div class="watch-links">
+                            <a href="${googleLink}" target="_blank" class="watch-btn">
+                                🔍 Google'da Ara
+                            </a>
+                            <a href="${youtubeSearchLink}" target="_blank" class="watch-btn">
+                                📺 YouTube'da Ara
+                            </a>
+                            <a href="${tmdbLink}" target="_blank" class="watch-btn secondary">
+                                📊 TMDB'de Gör
+                            </a>
+                            ${imdbLink ? `<a href="${imdbLink}" target="_blank" class="watch-btn secondary">⭐ IMDB'de Gör</a>` : ''}
+                        </div>
+
+                        ${castHTML}
+                    </div>
+                `;
+            },
+
+            closeModal(event) {
+                if (event && event.target !== event.currentTarget) return;
+                
+                const modal = document.getElementById('modalOverlay');
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            },
+
+            async toggleSeasonEpisodes(event, tvId, seasonNumber) {
+                event.stopPropagation();
+                
+                const button = event.currentTarget;
+                const episodesList = document.getElementById(`episodes-s${seasonNumber}`);
+                const seasonCard = button.closest('.season-item');
+
+                // Eğer zaten açıksa kapat
+                if (episodesList.classList.contains('show')) {
+                    episodesList.classList.remove('show');
+                    seasonCard.classList.remove('expanded');
+                    button.textContent = '📋 Bölümleri Göster';
+                    return;
+                }
+
+                // Loading state
+                button.textContent = '⏳ Yükleniyor...';
+                button.disabled = true;
+                episodesList.innerHTML = `
+                    <div class="episodes-loading">
+                        <div class="spinner"></div>
+                        <p>Bölümler yükleniyor...</p>
+                    </div>
+                `;
+                episodesList.classList.add('show');
+                seasonCard.classList.add('expanded');
+
+                try {
+                    const response = await fetch(
+                        `${this.config.baseUrl}/tv/${tvId}/season/${seasonNumber}?api_key=${this.config.apiKey}&language=${this.config.language}`
+                    );
+
+                    if (!response.ok) throw new Error('Bölümler yüklenemedi');
+
+                    const seasonData = await response.json();
+                    const episodes = seasonData.episodes || [];
+
+                    if (episodes.length === 0) {
+                        episodesList.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-secondary);">Bölüm bilgisi bulunamadı</p>';
+                        button.textContent = '❌ Bölüm Yok';
+                        button.disabled = false;
+                        return;
+                    }
+
+                    // Bölümleri render et
+                    episodesList.innerHTML = episodes.map(episode => {
+                        const airDate = episode.air_date ? new Date(episode.air_date).toLocaleDateString('tr-TR') : 'Tarih yok';
+                        const rating = episode.vote_average ? episode.vote_average.toFixed(1) : 'N/A';
+                        const runtime = episode.runtime ? `${episode.runtime} dk` : '';
+                        
+                        return `
+                            <div class="episode-item">
+                                <div class="episode-header">
+                                    <span class="episode-number">Bölüm ${episode.episode_number}</span>
+                                    <span class="episode-title">${episode.name || 'İsimsiz Bölüm'}</span>
+                                    ${episode.vote_average ? `
+                                        <span class="episode-rating">⭐ ${rating}</span>
+                                    ` : ''}
+                                </div>
+                                <div class="episode-meta">
+                                    <span>📅 ${airDate}</span>
+                                    ${runtime ? `<span>⏱️ ${runtime}</span>` : ''}
+                                </div>
+                                ${episode.overview ? `
+                                    <div class="episode-overview">${episode.overview}</div>
+                                ` : '<div class="episode-overview" style="font-style: italic;">Özet bilgisi mevcut değil</div>'}
+                            </div>
+                        `;
+                    }).join('');
+
+                    button.textContent = '✅ Bölümleri Gizle';
+                    button.disabled = false;
+
+                } catch (error) {
+                    console.error('Bölüm yükleme hatası:', error);
+                    episodesList.innerHTML = `
+                        <p style="text-align: center; padding: 2rem; color: var(--accent-red);">
+                            ⚠️ Bölümler yüklenirken hata oluştu
+                        </p>
+                    `;
+                    button.textContent = '❌ Hata';
+                    button.disabled = false;
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
